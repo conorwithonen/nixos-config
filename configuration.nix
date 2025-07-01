@@ -75,6 +75,9 @@
 
   # Default shell to zsh
   programs.zsh.enable = true;
+  programs.zsh.shellAliases = {
+    zed = "zeditor";
+  };
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -92,6 +95,8 @@
     pkgs.ghostty
     pkgs.gcc
     pkgs.starship
+    pkgs.cargo
+    pkgs.rustc
   ];
 
   system.stateVersion = "25.05"; # Did you read the comment?
