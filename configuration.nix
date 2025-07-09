@@ -24,6 +24,7 @@
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
+
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -62,6 +63,7 @@
     pulse.enable = true;
   };
 
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.conor = {
     isNormalUser = true;
@@ -85,18 +87,29 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Niri
+  programs.niri.enable = false; 
+
+  # Yazi 
+  programs.yazi.enable = true; 
+
+  # List packages installed in system profile. To search, run:
+  # $ nix search wget
   environment.systemPackages = with pkgs; [
     wget
+    dig
     git
     vim 
     neovim
     zsh
+    yazi
     pkgs.zed-editor
     pkgs.ghostty
     pkgs.gcc
     pkgs.starship
     pkgs.cargo
     pkgs.rustc
+    pkgs.niri
   ];
 
   system.stateVersion = "25.05"; # Did you read the comment?
