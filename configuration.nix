@@ -103,6 +103,7 @@
     neovim
     zsh
     yazi
+    obsidian
     pkgs.zed-editor
     pkgs.ghostty
     pkgs.gcc
