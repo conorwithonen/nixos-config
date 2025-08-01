@@ -1,0 +1,19 @@
+# https://taskfile.dev
+
+version: '3'
+
+vars:
+  GREETING: Hello, World!
+  NIX_PATH: /etc/nixos/configuration.nix
+
+tasks:
+  default:
+    cmds:
+      - echo "NixOS Configuration Tasks"
+      - task -l
+    silent: true
+  switch:
+    desc: nixos-rebuild switch
+    cmds:
+      - cp -p configuration.nix {{.NIX_PATH}}
+      - nixos-rebuild switch

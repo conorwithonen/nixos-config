@@ -96,15 +96,20 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    jq
+    ijq
     wget
     dig
     git
     vim 
     neovim
     zsh
+    unzip
     yazi
     obsidian
     pkgs.zed-editor
+    pkgs.nodejs_22
+    pkgs.go-task
     pkgs.ghostty
     pkgs.gcc
     pkgs.starship
