@@ -107,12 +107,14 @@
     unzip
     yazi
     obsidian
+    pkgs.awscli2
     pkgs.zed-editor
     pkgs.nodejs_22
     pkgs.go-task
     pkgs.ghostty
     pkgs.gcc
     pkgs.starship
+    pkgs.terraform
     pkgs.cargo
     pkgs.rustc
     pkgs.niri
