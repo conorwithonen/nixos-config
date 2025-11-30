@@ -106,6 +106,7 @@
     zsh
     unzip
     yazi
+    lazygit
     obsidian
     pkgs.awscli2
     pkgs.zed-editor
