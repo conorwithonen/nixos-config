@@ -13,7 +13,6 @@ tasks:
       - task -l
     silent: true
   switch:
-    desc: nixos-rebuild switch
+    desc: nixos-rebuild switch flake
     cmds:
-      - cp -p configuration.nix {{.NIX_PATH}}
-      - nixos-rebuild switch
+      - nixos-rebuild switch --flake .

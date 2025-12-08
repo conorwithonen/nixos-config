@@ -8,23 +8,23 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      ../users/conor
     ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
-  networking.hostName = "nixbook"; # Define your hostname.
-
+  networking = {
+    hostName = "nixbook"; # Define your hostname.
+    networkmanager.enable = true;
+  };
   # Enable networking
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
 
   # Select internationalisation properties.
   i18n.defaultLocale = "en_US.UTF-8";
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -53,6 +53,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable ssh.
+  services.openssh.enable = true;
+
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
   security.rtkit.enable = true;
@@ -61,18 +64,6 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-  };
-
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.conor = {
-    isNormalUser = true;
-    description = "Conor Manning";
-    extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
-    #  thunderbird
-    ];
-    shell = pkgs.zsh;
   };
 
   # Default shell to zsh
@@ -88,10 +79,10 @@
   nixpkgs.config.allowUnfree = true;
 
   # Niri
-  programs.niri.enable = false; 
+  programs.niri.enable = false;
 
-  # Yazi 
-  programs.yazi.enable = true; 
+  # Yazi
+  programs.yazi.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -101,7 +92,7 @@
     wget
     dig
     git
-    vim 
+    vim
     neovim
     zsh
     unzip
@@ -122,5 +113,6 @@
   ];
 
   system.stateVersion = "25.05"; # Did you read the comment?
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
 }
