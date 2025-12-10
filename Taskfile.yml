@@ -16,3 +16,7 @@ tasks:
     desc: nixos-rebuild switch flake
     cmds:
       - nixos-rebuild switch --flake .
+  clean:
+    desc: Cleans older nixos generations
+    cmds:
+      - nix-collect-garbage -d

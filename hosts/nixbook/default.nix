@@ -2,13 +2,13 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ../users/conor
+      ../common.nix
     ];
 
   # Bootloader.
@@ -20,22 +20,6 @@
   };
   # Enable networking
 
-  # Set your time zone.
-  time.timeZone = "America/Chicago";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -44,17 +28,9 @@
   services.xserver.displayManager.gdm.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
 
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
-  # Enable ssh.
-  services.openssh.enable = true;
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -66,17 +42,9 @@
     pulse.enable = true;
   };
 
-  # Default shell to zsh
-  programs.zsh.enable = true;
-  programs.zsh.shellAliases = {
-    zed = "zeditor";
-  };
 
   # Install firefox.
   programs.firefox.enable = true;
-
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
 
   # Niri
   programs.niri.enable = false;
@@ -87,20 +55,15 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    jq
-    ijq
     wget
     dig
-    git
-    vim
-    neovim
     zsh
     unzip
     yazi
     lazygit
     obsidian
-    pkgs.awscli2
     pkgs.zed-editor
+    # inputs.zed.packages.${system}.default
     pkgs.nodejs_22
     pkgs.go-task
     pkgs.ghostty
