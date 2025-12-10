@@ -9,4 +9,10 @@
     ];
     shell = pkgs.zsh;
   };
+
+  # Default shell to zsh
+  programs.zsh.enable = true;
+  programs.zsh.shellAliases = {
+    zed = "zeditor";
+  };
 }
