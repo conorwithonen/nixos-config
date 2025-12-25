@@ -3,9 +3,11 @@
     isNormalUser = true;
     description = "Conor Manning";
     home = "/home/conor";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
     #  thunderbird
+      pkgs.vlc
+      pkgs.abcde
     ];
     shell = pkgs.zsh;
   };
