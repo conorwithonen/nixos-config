@@ -42,6 +42,11 @@
     pulse.enable = true;
   };
 
+  services.mullvad-vpn = {
+  enable = true;
+  package = pkgs.mullvad-vpn;
+};
+
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -51,6 +56,9 @@
 
   # Yazi
   programs.yazi.enable = true;
+
+  # Docker
+  virtualisation.docker.enable = true;
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
@@ -62,6 +70,9 @@
     yazi
     lazygit
     obsidian
+    docker-compose
+    pkgs.mullvad-vpn
+    qbittorrent
     pkgs.zed-editor
     # inputs.zed.packages.${system}.default
     pkgs.nodejs_22
