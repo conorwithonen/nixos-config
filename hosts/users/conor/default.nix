@@ -7,6 +7,7 @@
     packages = with pkgs; [
     #  thunderbird
       pkgs.vlc
+      pkgs.ijq
       pkgs.abcde
     ];
     shell = pkgs.zsh;
