@@ -47,6 +47,7 @@
   package = pkgs.mullvad-vpn;
 };
 
+  programs.dconf.enable = true;
 
   # Install firefox.
   programs.firefox.enable = true;
