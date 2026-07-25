@@ -6,9 +6,15 @@
     extraGroups = [ "networkmanager" "wheel" "docker" ];
     packages = with pkgs; [
     #  thunderbird
+      pkgs.mpv
       pkgs.vlc
+      pkgs.clamav
       pkgs.ijq
       pkgs.abcde
+      pkgs.mixxx
+      pkgs.nicotine-plus
+      pkgs.bitwarden-desktop
+      pkgs.ansible
     ];
     shell = pkgs.zsh;
   };
