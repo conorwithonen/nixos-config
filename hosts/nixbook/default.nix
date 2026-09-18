@@ -61,6 +61,22 @@
   # Docker
   virtualisation.docker.enable = true;
 
+  # Syncthing
+  services.syncthing = {
+    enable = true;
+    openDefaultPorts = true;
+    user = "conor";
+    dataDir = "/home/conor/syncthing";
+	settings = {
+      devices = {
+       "imac" = { id = "JDF4MHN-IFKO35B-VJUZCA2-R34QAWZ-C5JCYWB-VZGX2BT-M2VKR7A-AV34GQC"; };
+       "phone" = { id = "WGPWB7E-B5F3BHR-2OQOSSH-K2BT37H-ZZSVC4B-VHATR7U-UGY4OFS-LI72IQO"; };
+      };
+    
+
+    };
+  };
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -74,6 +90,7 @@
     docker-compose
     pkgs.mullvad-vpn
     qbittorrent
+    pkgs.syncthing
     pkgs.zed-editor
     # inputs.zed.packages.${system}.default
     pkgs.nodejs_22
