@@ -79,5 +79,6 @@
     jq
     python3
     pkgs.awscli2
+    sshpass
   ];
 }

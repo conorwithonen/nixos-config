@@ -15,6 +15,8 @@
       pkgs.nicotine-plus
       pkgs.bitwarden-desktop
       pkgs.ansible
+      pkgs.jujutsu
+      pkgs.terraform-ls
     ];
     shell = pkgs.zsh;
   };
