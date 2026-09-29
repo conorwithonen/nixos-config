@@ -1,4 +1,4 @@
-{  config, pkgs, ...}:{
+{  config, pkgs, pkgs-unstable, ...}:{
   users.users.conor = {
     isNormalUser = true;
     description = "Conor Manning";
@@ -30,7 +30,7 @@
       pkgs.ansible
       pkgs.jujutsu
       pkgs.terraform-ls
-      pkgs.zed-editor
+      pkgs-unstable.zed-editor
       pkgs.mullvad-vpn
       pkgs.niri
     ];
