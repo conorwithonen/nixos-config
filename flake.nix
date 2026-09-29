@@ -3,10 +3,6 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # zed = {
-    #     url = "github:zed-industries/zed";
-    #     inputs.nixpkgs.follows = "nixpkgs";
-    # };
   };
   outputs = { self, nixpkgs, nixpkgs-unstable, ... }@inputs:
   let
