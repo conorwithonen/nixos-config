@@ -1,8 +1,13 @@
-{  config, pkgs, pkgs-unstable, ...}:{
-  users.users.conor = {
+{  config, pkgs, pkgs-unstable, ...}:
+let
+  username = "conor";
+  gnome_accent_color = "yellow";
+in
+{
+  users.users.${username} = {
     isNormalUser = true;
     description = "Conor Manning";
-    home = "/home/conor";
+    home = "/home/${username}";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
 
     packages = with pkgs; [
@@ -37,6 +42,12 @@
     shell = pkgs.zsh;
   };
 
+  # User picture hack
+  system.activationScripts.setUserIcon = ''
+    cp ${./icon.png} /var/lib/AccountsService/icons/${username}
+    chmod 644 /var/lib/AccountsService/icons/${username}
+  '';
+
   # Theme settings stuff
   # TODO: Profile picture stuff
   programs.dconf.profiles.user.databases = [
@@ -44,13 +55,13 @@
       lockAll = true; # prevents overriding
       settings = {
         "org/gnome/desktop/interface" = {
-          accent-color = "yellow";
+          accent-color = "${gnome_accent_color}";
         };
         "org/gnome/desktop/background" = {
           picture-uri =
-            "file://" + ./kanagawa-wave.jpg;
+            "file://${./wallpaper.jpg}";
           picture-uri-dark =
-            "file://" + ./kanagawa-wave.jpg;
+            "file://${./wallpaper.jpg}";
           # picture-options = "zoom";
         };
         "org/gnome/desktop/input-sources" = {
@@ -63,8 +74,8 @@
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
-    user = "conor";
-    dataDir = "/home/conor/syncthing";
+    user = "${username}";
+    dataDir = "/home/${username}/syncthing";
 	settings = {
       devices = {
        "imac" = { id = "JDF4MHN-IFKO35B-VJUZCA2-R34QAWZ-C5JCYWB-VZGX2BT-M2VKR7A-AV34GQC"; };
