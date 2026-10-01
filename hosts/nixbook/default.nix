@@ -47,18 +47,6 @@
 
   programs.dconf.enable = true;
 
-  # Install firefox.
-  programs.firefox = {
-    enable = true;
-	preferences = {
-	  "browser.startup.homepage"      = "https://wiki.conorwithonen.com";
-	  "privacy.resistFingerprinting"  = true;
-	};
-	policies = {
-	  DisableTelemetry = true;
-	};
-};
-
   # Docker
   virtualisation.docker.enable = true;
 

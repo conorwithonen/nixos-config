@@ -84,6 +84,18 @@ in
     };
   };
 
+  # Install firefox.
+  programs.firefox = {
+    enable = true;
+  	preferences = {
+  	  "browser.startup.homepage"      = "https://wiki.conorwithonen.com";
+  	  "privacy.resistFingerprinting"  = true;
+  	};
+  	policies = {
+  	  DisableTelemetry = true;
+  	};
+  };
+
   # Niri
   programs.niri.enable = false;
 
