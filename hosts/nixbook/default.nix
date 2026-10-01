@@ -43,7 +43,7 @@
   services.mullvad-vpn = {
   enable = true;
   package = pkgs.mullvad-vpn;
-};
+  };
 
   programs.dconf.enable = true;
 
