@@ -7,6 +7,7 @@ in
   users.users.${username} = {
     isNormalUser = true;
     description = "Conor Manning";
+    hashedPasswordFile = builtins.readFile ./password_hash.txt;
     home = "/home/${username}";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
 
