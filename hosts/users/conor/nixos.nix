@@ -1,4 +1,4 @@
-{  config, pkgs, pkgs-unstable, ...}:
+{  config, pkgs, ...}:
 let
   username = "conor";
   gnome_accent_color = "yellow";
@@ -7,39 +7,9 @@ in
   users.users.${username} = {
     isNormalUser = true;
     description = "Conor Manning";
-    hashedPasswordFile = builtins.readFile ./password_hash.txt;
+    hashedPassword = "$6$bXsGPpJNJx99PuR8$wtSFCJPKIMFqHFEGye1hyRpWIcSphpuoXo1bMLm6c3nynask2jx/jQB7h8/kU1cMBqdiROFKIUfSldtCCwBeM1";
     home = "/home/${username}";
     extraGroups = [ "networkmanager" "wheel" "docker" ];
-
-    packages = with pkgs; [
-    #  thunderbird
-      yazi
-      lazygit
-      obsidian
-      qbittorrent
-      pkgs.syncthing
-      pkgs.nodejs_22
-      pkgs.go-task
-      pkgs.ghostty
-      pkgs.gcc
-      pkgs.starship
-      pkgs.terraform
-      pkgs.mpv
-      pkgs.firefox
-      pkgs.vlc
-      pkgs.clamav
-      pkgs.ijq
-      pkgs.abcde
-      pkgs.mixxx
-      pkgs.nicotine-plus
-      pkgs.bitwarden-desktop
-      pkgs.ansible
-      pkgs.jujutsu
-      pkgs.terraform-ls
-      pkgs-unstable.zed-editor
-      pkgs.mullvad-vpn
-      pkgs.niri
-    ];
     shell = pkgs.zsh;
   };
 
@@ -68,6 +38,9 @@ in
         "org/gnome/desktop/input-sources" = {
           xkb-options = [ "ctrl:nocaps" ];
         };
+        "org/gnome/desktop/peripherals/touchpad" = {
+          natural-scroll = false;
+        };
       };
     }
   ];
@@ -88,10 +61,6 @@ in
   # Install firefox.
   programs.firefox = {
     enable = true;
-  	preferences = {
-  	  "browser.startup.homepage"      = "https://wiki.conorwithonen.com";
-  	  "privacy.resistFingerprinting"  = true;
-  	};
   	policies = {
   	  DisableTelemetry = true;
   	};
@@ -102,10 +71,5 @@ in
 
   # Yazi
   programs.yazi.enable = true;
-
-  # Default shell to zsh
   programs.zsh.enable = true;
-  programs.zsh.shellAliases = {
-    zed = "zeditor";
-  };
 }

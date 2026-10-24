@@ -3,9 +3,6 @@
   ...
 }:
 {
-  imports = [
-    ./users/conor
-  ];
   nix = {
     settings.experimental-features = [
       "nix-command"
