@@ -24,11 +24,11 @@
     "legacy-dotfiles": {
       "flake": false,
       "locked": {
-        "lastModified": 1792181345,
-        "narHash": "sha256-DqxX3JAG7wUxgWU6BUvfT7nHxG/xkgy3UNBk3PRUMVU=",
+        "lastModified": 1792909495,
+        "narHash": "sha256-PL9eDuAimhNxiAX09uYKJQlXwmCET3OOSNUPUAKXZYE=",
         "owner": "conorwithonen",
         "repo": "dotfiles",
-        "rev": "3d6e4c5e834fd1a4027a8084e011b3010e3cc619",
+        "rev": "36ccd2e9b4927409e475c029529793bf94417201",
         "type": "github"
       },
       "original": {

@@ -12,7 +12,7 @@ tasks:
       - echo "NixOS Configuration Tasks"
       - task -l
     silent: true
-  switch-stable:
+  switch:
     desc: Switch to stable setup
     cmds:
       - nixos-rebuild switch --flake .#nixbook

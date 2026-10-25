@@ -14,7 +14,12 @@
       flake = false;
     };
   };
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }@inputs:
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    home-manager,
+    legacy-dotfiles, ... }@inputs:
   let
       overlays = [
         (_final: prev: let
@@ -28,7 +33,7 @@
         })
       ];
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs overlays inputs;
+        inherit nixpkgs overlays inputs legacy-dotfiles;
       };
   in
   {

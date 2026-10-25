@@ -1,7 +1,7 @@
 # This function creates a NixOS system based on our VM setup for a
 # particular architecture.
 # Shamefully ripped from mitchellh
-{ nixpkgs, overlays, inputs }:
+{ nixpkgs, overlays, inputs, legacy-dotfiles }:
 
 name:
 {
@@ -36,6 +36,8 @@ in systemFunc rec {
     home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
+      home-manager.extraSpecialArgs = { inherit legacy-dotfiles user; };
+      home-manager.backupFileExtension = "backup";
       home-manager.users.${user} = import userHMConfig {
         inputs = inputs;
         currentSystemName = name;

@@ -1,7 +1,6 @@
 {  config, pkgs, ...}:
 let
   username = "conor";
-  gnome_accent_color = "yellow";
 in
 {
   users.users.${username} = {
@@ -20,30 +19,7 @@ in
   '';
 
   # Theme settings stuff
-  # TODO: Profile picture stuff
-  programs.dconf.profiles.user.databases = [
-    {
-      lockAll = true; # prevents overriding
-      settings = {
-        "org/gnome/desktop/interface" = {
-          accent-color = "${gnome_accent_color}";
-        };
-        "org/gnome/desktop/background" = {
-          picture-uri =
-            "file://${./wallpaper.jpg}";
-          picture-uri-dark =
-            "file://${./wallpaper.jpg}";
-          # picture-options = "zoom";
-        };
-        "org/gnome/desktop/input-sources" = {
-          xkb-options = [ "ctrl:nocaps" ];
-        };
-        "org/gnome/desktop/peripherals/touchpad" = {
-          natural-scroll = false;
-        };
-      };
-    }
-  ];
+  programs.dconf.enable = true;
   # Syncthing
   services.syncthing = {
     enable = true;
@@ -69,7 +45,5 @@ in
   # Niri
   programs.niri.enable = false;
 
-  # Yazi
-  programs.yazi.enable = true;
   programs.zsh.enable = true;
 }

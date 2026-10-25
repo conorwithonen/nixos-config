@@ -1,28 +1,17 @@
 { inputs, currentSystemName, ... }:
 
-{ config, lib, pkgs, pkgs-unstable, ... }:
+{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
   # gopath = "${config.home.homeDirectory}/Developer/go";
+  gnome_accent_color = "yellow";
+  # TODO: Fix this this.
+  username = "conor";
 
   shellAliases = {
-#     ga = "git add";
-#     gc = "git commit";
-#     gco = "git checkout";
-#     gcp = "git cherry-pick";
-#     gdiff = "git diff";
-#     gl = "git prettylog";
-#     gp = "git push";
     gs = "git status";
-#     gt = "git tag";
-#
-#     jd = "jj desc";
-#     jf = "jj git fetch";
-#     jn = "jj new";
-#     jp = "jj git push";
-#     js = "jj st";
   } // (if isLinux then {
     # Two decades of using a Mac has made this such a strong memory
     # that I'm just going to keep it consistent.
@@ -38,11 +27,54 @@ in {
   # to use the old state version.
   home.stateVersion = "18.09";
 
+  #---------------------------------------------------------------------
+  # Files
+  #---------------------------------------------------------------------
+
+
+  home.file = {
+    ".face".source = ./icon.png;
+    ".zshrc".source = "${legacy-dotfiles}/link/.zshrc";
+    "dotfiles".source = "${legacy-dotfiles}";
+
+  # home.file.".config/zed".source = "${legacy-dotfiles}/zed";
+    ".config/starship.toml".source = "${legacy-dotfiles}/config/starship.toml";
+    ".config/zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
+    ".config/zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
+    ".config/yazi".source = "${legacy-dotfiles}/config/yazi";
+    ".config/ghostty".source = "${legacy-dotfiles}/config/ghostty";
+
+    "/var/lib/AccountService/icons/${username}/icon.png".source = ./icon.png;
+  };
+  # programs.dconf = {
+  #   enable = true;
+  #   profiles.user.databases = [
+  #     {
+  #       lockAll = true; # prevents overriding
+  #       settings = {
+  #         "org/gnome/desktop/interface" = {
+  #           accent-color = "${gnome_accent_color}";
+  #         };
+  #         "org/gnome/desktop/background" = {
+  #           picture-uri =
+  #             "file://${./wallpaper.jpg}";
+  #           picture-uri-dark =
+  #             "file://${./wallpaper.jpg}";
+  #           # picture-options = "zoom";
+  #         };
+  #         "org/gnome/desktop/input-sources" = {
+  #           xkb-options = [ "ctrl:nocaps" ];
+  #         };
+  #         "org/gnome/desktop/peripherals/touchpad" = {
+  #           natural-scroll = false;
+  #         };
+  #       };
+  #     }
+  #   ];
+  # };
+
   # Disabled for now since we mismatch our versions. See flake.nix for details.
   home.enableNixpkgsReleaseCheck = false;
-
-  xdg.enable = true;
-
   #---------------------------------------------------------------------
   # Packages
   #---------------------------------------------------------------------
@@ -93,22 +125,20 @@ in {
     DISPLAY = "nixpkgs-390751";
   } else {});
 
-  # home.file = {
-  #   ".gdbinit".source = ./gdbinit;
-  #   ".inputrc".source = ./inputrc;
-  # };
-
-  # xdg.configFile = {
-  #   "i3/config".text = builtins.readFile ./i3;
-  #   "nvim/init.lua".force = true;
-  #   "rofi/config.rasi".text = builtins.readFile ./rofi;
-  # } // (if isDarwin then {
-  #   # Rectangle.app. This has to be imported manually using the app.
-  #   "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
-  # } else {}) // (if isLinux then {
-  #   "ghostty/config".text = builtins.readFile ./ghostty.linux;
-  # } else {});
-
+#   xdg = {
+#     enable = true;
+#     configFile = {
+#       "i3/config".text = builtins.readFile ./i3;
+#       "nvim/init.lua".force = true;
+#       "rofi/config.rasi".text = builtins.readFile ./rofi;
+#     } // (if isDarwin then {
+#       # Rectangle.app. This has to be imported manually using the app.
+#       "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+#     } else {}) // (if isLinux then {
+#       "ghostty/config".text = builtins.readFile   ;
+#     } else {});
+#   };
+#
   #---------------------------------------------------------------------
   # Programs
   #---------------------------------------------------------------------
@@ -132,7 +162,7 @@ in {
       user.email = "conormanning13@gmail.com";
       branch.autosetuprebase = "always";
       color.ui = true;
-      # core.askPass = ""; # needs to be empty to use terminal for ask pass
+      core.askPass = ""; # needs to be empty to use terminal for ask pass
       # credential.helper = "store"; # want to make this more secure
       github.user = "conorwithonen";
       init.defaultBranch = "main";
@@ -152,17 +182,20 @@ in {
      	  "privacy.resistFingerprinting"  = true;
      	};
     };
-  	# policies = {
-   #   DisableTelemetry = true;
-   #   DisablePocket = true;
-   #   EnableTrackingProtection = {
-   #     Value = true;
-   #     Locked = true;
-   #     Cryptomining = true;
-   #     Fingerprinting = true;
-   #   };
-  	# };
+  	policies = {
+     DisableTelemetry = true;
+     DisablePocket = true;
+     EnableTrackingProtection = {
+       Value = true;
+       Locked = true;
+       Cryptomining = true;
+       Fingerprinting = true;
+     };
+  	};
   };
+
+  # Yazi
+  programs.yazi.enable = true;
   # programs.neovim = {
   #   enable = true;
   #   package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
@@ -171,20 +204,5 @@ in {
   #   initLua = ''
   #     require("config.lazy")
   #   '';
-  # };
-
-  # programs.npm = {
-  #   enable = isLinux;
-  # };
-
-
-  # xresources.extraConfig = builtins.readFile ./Xresources;
-
-  # # Make cursor not tiny on HiDPI screens
-  # home.pointerCursor = lib.mkIf (isLinux && !isWSL) {
-  #   name = "Vanilla-DMZ";
-  #   package = pkgs.vanilla-dmz;
-  #   size = 128;
-  #   x11.enable = true;
   # };
 }
