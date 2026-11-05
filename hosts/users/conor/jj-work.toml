@@ -1,0 +1,6 @@
+--when.workspaces = [
+"~/workdir"
+]
+[user]
+name = "Conor Manning"
+email = ""

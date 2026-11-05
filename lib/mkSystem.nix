@@ -1,7 +1,7 @@
 # This function creates a NixOS system based on our VM setup for a
 # particular architecture.
 # Shamefully ripped from mitchellh
-{ nixpkgs, overlays, inputs, legacy-dotfiles }:
+{ nixpkgs, overlays, inputs, legacy-dotfiles, hunk }:
 
 name:
 {
