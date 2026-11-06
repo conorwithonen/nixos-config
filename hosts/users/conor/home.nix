@@ -1,6 +1,6 @@
 { inputs, currentSystemName, ... }:
 
-{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, ... }:
+{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, sops-nix, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
@@ -30,11 +30,24 @@ let
   } else {});
 
 in {
-  # imports = [ inputs.direnv-instant.homeModules.direnv-instant ];
+  imports = [ sops-nix ];
 
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
   home.stateVersion = "18.09";
+
+  #---------------------------------------------------------------------
+  # Secrets
+  #---------------------------------------------------------------------
+  sops = {
+    defaultSopsFile = ./secrets.enc.yaml;
+    age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/nixbook-sops" ];
+      secrets = {
+        "syncthing/key" = { };
+        "syncthing/cert" = { };
+        "syncthing/password" = { };
+      };
+  };
 
   #---------------------------------------------------------------------
   # Files
@@ -76,8 +89,12 @@ in {
   # Packages
   #---------------------------------------------------------------------
   home.packages = [
-    # hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk
     inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk
+    pkgs.fzf
+    pkgs.fd
+    pkgs.sops
+    pkgs.age
+    pkgs.ssh-to-age
     pkgs.bat
     pkgs.yazi
     pkgs.obsidian
@@ -134,7 +151,7 @@ in {
       "zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
       "zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
       "jj/config.toml".text = builtins.readFile ./jj-config.toml;
-      "jj/conf.d/personal.toml".text = builtins.readFile ./jj-pesonal.toml;
+      "jj/conf.d/personal.toml".text = builtins.readFile ./jj-personal.toml;
       "jj/conf.d/work.toml".text = builtins.readFile ./jj-work.toml;
     } // (if isDarwin then {
       # Rectangle.app. This has to be imported manually using the app.
@@ -208,8 +225,14 @@ in {
     };
   };
 
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   programs.zsh = {
     enable = true;
+    defaultKeymap = "emacs";
     shellAliases = shellAliases;
     dotDir = "${config.xdg.configHome}/zsh";
 
@@ -290,8 +313,13 @@ in {
   # Syncthing
   services.syncthing = {
     enable = true;
-    key = "/home/${username}/.config/syncthing/key.pem";
-    cert = "/home/${username}/.config/syncthing/cert.pem";
+    guiAddress = "127.0.0.1:8384";
+    key = config.sops.secrets."syncthing/key".path;
+    cert = config.sops.secrets."syncthing/cert".path;
+    guiCredentials = {
+     username = "conor";
+     passwordFile = config.sops.secrets."syncthing/password".path;
+    };
   	settings = {
       devices = {
         "imac" = { id = "W4PLFOQ-MMAODQT-N64HU77-CGNKD4K-65JGV4A-JHCIURF-SBUCRGT-4HA33QC"; autoAcceptFolders = true; };

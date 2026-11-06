@@ -22,6 +22,7 @@ let
   # NixOS vs nix-darwin functionst
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
+  sops-nix = inputs.sops-nix.homeManagerModules.sops;
 
   inherit (nixpkgs.lib);
 in systemFunc rec {
@@ -36,7 +37,7 @@ in systemFunc rec {
     home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit legacy-dotfiles user; };
+      home-manager.extraSpecialArgs = { inherit legacy-dotfiles user sops-nix; };
       home-manager.backupFileExtension = "backup";
       home-manager.users.${user} = import userHMConfig {
         inputs = inputs;

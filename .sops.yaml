@@ -1,5 +1,5 @@
 keys:
-  - &nixbook age1tjak3zlkj8853vc7n5tthuwhjhqr3el9fa3ngzyqs7npef5daaxqw0fu68
+  - &nixbook age1ymgy90gx969dnap4mm2fe6qs4ygkkhnf7wy75jvrzcswn0aucfsq8zcrf6
 creation_rules:
   - path_regex: hosts/.*/secrets.yaml
     key_groups:
