@@ -20,6 +20,14 @@ tasks:
     desc: Switch to new setup
     cmds:
       - nixos-rebuild switch --flake .#nixbook2
+  show_secrets:
+    desc: "Riskyyyy"
+    cmds:
+      - sops -d hosts/users/conor/secrets.enc.yaml
+  edit_secrets:
+    desc: "Riskyyyy"
+    cmds:
+      - sops edit hosts/users/conor/secrets.enc.yaml
   clean:
     desc: Cleans older nixos generations
     cmds:

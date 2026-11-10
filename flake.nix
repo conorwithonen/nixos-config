@@ -4,6 +4,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    sops-nix = {
+      url = "github:Mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -25,6 +30,7 @@
     self,
     nixpkgs,
     nixpkgs-unstable,
+    sops-nix,
     home-manager,
     legacy-dotfiles,
     hunk, ... }@inputs:

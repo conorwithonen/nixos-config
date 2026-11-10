@@ -1,9 +1,9 @@
 --when.workspaces = [
-"~/dotfiles", 
-"~/projects"
+"~/dotfiles",
+"~/projects",
+"~/nixos-config"
 ]
 
 [user]
 name = "Conor Manning"
 email = "conormanning13@gmail.com"
-
