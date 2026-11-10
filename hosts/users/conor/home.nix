@@ -80,6 +80,11 @@ in {
       "org/gnome/desktop/peripherals/touchpad" = {
         natural-scroll = false;
       };
+      "org/gnome/desktop/notifications/applications/thunderbird" = {
+        application-id = "thunderbird.desktop";
+        enable = false;
+        # show-banners = false;
+      };
     };
   };
 
