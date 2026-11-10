@@ -1,0 +1,9 @@
+--when.workspaces = [
+"~/dotfiles", 
+"~/projects"
+]
+
+[user]
+name = "Conor Manning"
+email = "conormanning13@gmail.com"
+

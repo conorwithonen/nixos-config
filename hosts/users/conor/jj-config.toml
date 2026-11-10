@@ -1,0 +1,26 @@
+# Move the closest bookmark to the current commit. This is useful when
+# working on a named branch, creating a bunch of commits, and then needing
+# to update the bookmark before pushing.
+tug = ["bookmark", "move", "--from", "closest_bookmark(@-)", "--to", "@-"]
+
+[ui]
+default-command = "log"
+
+[template-aliases]
+"format_timestamp(timestamp)" = "timestamp.ago()"
+# email(), name(), or just signature for both
+'format_short_signature(signature)' = 'signature.email()'
+
+[revset-aliases]
+"immutable_heads()" = "builtin_immutable_heads() | trunk() | present(master) | present(release)"
+
+# disable pagination for `jj status`, use `delta` for `jj diff` and `jj show`
+[[--scope]]
+--when.commands = ["status"]
+[--scope.ui]
+paginate = "never"
+[[--scope]]
+--when.commands = ["diff", "show"]
+[--scope.ui]
+pager = ["hunk", "pager"]
+diff-formatter = ":git"
