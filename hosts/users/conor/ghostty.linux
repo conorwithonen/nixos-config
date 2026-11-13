@@ -1,9 +1,6 @@
+theme = Kanagawabones
 font-size = 14
 font-family = JetBrains Mono
-background-opacity = 0.95
-background-blur = true
-macos-non-native-fullscreen = visible-menu
-macos-option-as-alt = left
 mouse-hide-while-typing = true
 
 # Keybinds to match macOS since this is a VM
@@ -27,3 +24,5 @@ keybind = super+d=new_split:right
 keybind = super+shift+d=new_split:down
 keybind = super+right_bracket=goto_split:next
 keybind = super+left_bracket=goto_split:previous
+
+bell-features = system
