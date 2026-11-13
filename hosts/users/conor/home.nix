@@ -30,7 +30,7 @@ let
   } else {});
 
 in {
-  imports = [ sops-nix ];
+  imports = [ sops-nix ./nvim];
 
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
@@ -92,6 +92,7 @@ in {
     inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk
     pkgs.fzf
     pkgs.fd
+    pkgs.ripgrep
     pkgs.sops
     pkgs.age
     pkgs.ssh-to-age
@@ -354,13 +355,4 @@ in {
         };
       };
     };
-  # programs.neovim = {
-  #   enable = true;
-  #   package = inputs.neovim-nightly-overlay.packages.${pkgs.stdenv.hostPlatform.system}.default;
-  #   withPython3 = true;
-  #   withRuby = true;
-  #   initLua = ''
-  #     require("config.lazy")
-  #   '';
-  # };
 }
