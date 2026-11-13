@@ -11,6 +11,20 @@
       ./common.nix
     ];
 
+  #---------------------------------------------------------------------
+  # Secrets
+  # #---------------------------------------------------------------------
+  sops = {
+    defaultSopsFile = ../users/conor/secrets.enc.yaml;
+    age.sshKeyPaths = [ "/home/conor/.ssh/nixbook-sops" ];
+      secrets = {
+        "syncthing/key" = { owner = "conor"; };
+        "syncthing/cert" = { owner = "conor"; };
+        "syncthing/password" = { owner = "conor"; };
+      };
+  };
+
+
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -40,6 +54,26 @@
     pulse.enable = true;
   };
 
+  # Syncthing
+  services.syncthing = {
+    user = "conor";
+    group = "users";
+    dataDir = "/home/conor";
+    configDir = "/home/conor/.config/syncthing";
+    enable = true;
+    guiAddress = "127.0.0.1:8384";
+    key = config.sops.secrets."syncthing/key".path;
+    cert = config.sops.secrets."syncthing/cert".path;
+    guiPasswordFile = config.sops.secrets."syncthing/password".path;
+  	settings = {
+     gui.user = "conor";
+      devices = {
+        "imac" = { id = "W4PLFOQ-MMAODQT-N64HU77-CGNKD4K-65JGV4A-JHCIURF-SBUCRGT-4HA33QC"; autoAcceptFolders = true; };
+        "phone" = { id = "WGPWB7E-B5F3BHR-2OQOSSH-K2BT37H-ZZSVC4B-VHATR7U-UGY4OFS-LI72IQO"; };
+      };
+    };
+  };
+
   services.mullvad-vpn = {
   enable = true;
   package = pkgs.mullvad-vpn;
@@ -57,6 +91,7 @@
     dig
     zsh
     unzip
+    syncthing
     docker-compose
     pkgs.cargo
     pkgs.rustc

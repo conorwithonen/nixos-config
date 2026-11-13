@@ -1,6 +1,6 @@
 { inputs, currentSystemName, ... }:
 
-{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, sops-nix, ... }:
+{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
@@ -30,7 +30,7 @@ let
   } else {});
 
 in {
-  imports = [ sops-nix ./nvim];
+  imports = [ ./nvim];
 
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
@@ -38,16 +38,16 @@ in {
 
   #---------------------------------------------------------------------
   # Secrets
-  #---------------------------------------------------------------------
-  sops = {
-    defaultSopsFile = ./secrets.enc.yaml;
-    age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/nixbook-sops" ];
-      secrets = {
-        "syncthing/key" = { };
-        "syncthing/cert" = { };
-        "syncthing/password" = { };
-      };
-  };
+  # #---------------------------------------------------------------------
+  # sops = {
+  #   defaultSopsFile = ./secrets.enc.yaml;
+  #   age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/nixbook-sops" ];
+  #     secrets = {
+  #       "syncthing/key" = { };
+  #       "syncthing/cert" = { };
+  #       "syncthing/password" = { };
+  #     };
+  # };
 
   #---------------------------------------------------------------------
   # Files
@@ -105,7 +105,6 @@ in {
     pkgs.yazi
     pkgs.obsidian
     pkgs.qbittorrent
-    pkgs.syncthing
     pkgs.nodejs_22
     pkgs.go-task
     pkgs.ghostty
@@ -316,23 +315,6 @@ in {
   	};
   };
 
-  # Syncthing
-  services.syncthing = {
-    enable = true;
-    guiAddress = "127.0.0.1:8384";
-    key = config.sops.secrets."syncthing/key".path;
-    cert = config.sops.secrets."syncthing/cert".path;
-    guiCredentials = {
-     username = "conor";
-     passwordFile = config.sops.secrets."syncthing/password".path;
-    };
-  	settings = {
-      devices = {
-        "imac" = { id = "W4PLFOQ-MMAODQT-N64HU77-CGNKD4K-65JGV4A-JHCIURF-SBUCRGT-4HA33QC"; autoAcceptFolders = true; };
-        "phone" = { id = "WGPWB7E-B5F3BHR-2OQOSSH-K2BT37H-ZZSVC4B-VHATR7U-UGY4OFS-LI72IQO"; };
-      };
-    };
-  };
 
   # Yazi
   programs.yazi.enable = true;
