@@ -32,4 +32,4 @@ tasks:
   clean:
     desc: Cleans older nixos generations
     cmds:
-      - nix-collect-garbage -d
+      - sudo nix-collect-garbage -d
