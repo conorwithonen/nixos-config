@@ -15,9 +15,9 @@ let
   isLinux = !darwin;
 
   # The config files for this system.
-  machineConfig = ../hosts/${name}/default.nix;
-  userOSConfig = ../hosts/users/${user}/${if darwin then "darwin" else "nixos" }.nix;
-  userHMConfig = ../hosts/users/${user}/home.nix;
+  machineConfig = ../machines/${name}.nix;
+  userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
+  userHMConfig = ../users/${user}/home.nix;
 
   # NixOS vs nix-darwin functionst
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
