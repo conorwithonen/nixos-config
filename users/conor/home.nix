@@ -307,17 +307,21 @@ in {
       isDefault = true;
      	settings = {
      	  "browser.startup.homepage"      = "https://wiki.conorwithonen.com";
-     	  "privacy.resistFingerprinting"  = true;
+        "extensions.autoDisableScopes" = 0;
+
+        # Dark UI + dark content
+        "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+        "layout.css.prefers-color-scheme.content-override" = 0;
+
+        # RFP forces light, so use granular protection instead
+        "privacy.resistFingerprinting" = false;
+        "privacy.fingerprintingProtection" = true;
+        "privacy.fingerprintingProtection.overrides" = "+AllTargets,-CSSPrefersColorScheme";
      	};
       extensions = {
         packages = with pkgs.firefoxAddons; [
           bitwarden-password-manager
         ];
-      };
-
-      # optional: without this the addons need to be enabled manually after first install
-      settings = {
-        "extensions.autoDisableScopes" = 0;
       };
     };
   	policies = {
