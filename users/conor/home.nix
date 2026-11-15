@@ -20,6 +20,7 @@ let
     gshow = "git show";
     gshowf = "git show --name-only";
     sshconfig = "vim ~/.ssh/config";
+    list-hardware-keys = "ykman fido credentials list";
 
   } // (if isLinux then {
     # Two decades of using a Mac has made this such a strong memory
@@ -96,6 +97,7 @@ in {
   home.packages = [
     inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk
     pkgs.fzf
+    pkgs.yubikey-manager
     pkgs.fd
     pkgs.ripgrep
     pkgs.sops
@@ -253,6 +255,21 @@ in {
           source "$file"
       done
       unset file;
+
+      ssh-create-resident() {
+        local name="$1"
+        ssh-keygen -t ed25519-sk -O resident -O application=ssh:$name -C "conor@conormanning.com"
+      }
+
+      ssh-create-nonresident() {
+        local name=$1
+        ssh-keygen -t ed25519-sk -O application=ssh:$name -C "conor@conormanning.com"
+      }
+
+      ssh-create-resident-no-touch() {
+        local name=$1
+        ssh-keygen -t ed25519-sk -O resident -O no-touch-required -O application="ssh:$name" -C "conor@conormanning.com"
+      }
 
       # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
       [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
