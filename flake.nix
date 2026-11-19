@@ -46,6 +46,7 @@
           zed-editor = unstable.zed-editor;
           obsidian = unstable.obsidian;
           starship = unstable.starship;
+          yazi = unstable.yazi;
 
         })
         inputs.nix-firefox-addons.overlays.default

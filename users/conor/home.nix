@@ -153,7 +153,6 @@ in {
   xdg = {
     enable = true;
     configFile = {
-      "yazi".source = "${legacy-dotfiles}/config/yazi";
       "starship.toml".source = "${legacy-dotfiles}/config/starship.toml";
       "zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
       "zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
@@ -338,8 +337,28 @@ in {
 
 
   # Yazi
-  programs.yazi.enable = true;
-  programs.yazi.shellWrapperName = "y";
+  programs.yazi = {
+    enable = true;
+    flavors = {
+      kanagawa = pkgs.fetchFromGitHub {
+        owner = "dangooddd";
+        repo = "kanagawa.yazi";
+        rev = "04985d12842b06bdb3ad5f1b3d7abc631059b7f5";
+        hash = "sha256-Yz0zRVzmgbrk0m7OkItxIK6W0WkPze/t09pWFgziNrw=";
+      };
+    };
+    shellWrapperName = "y";
+    settings = {
+      theme.dark = "kanagawa";
+      mgr = {
+        show_hidden = true;
+        sort_dir_first = false;
+        sort_by = "mtime";
+        sort_reverse = true;
+        linemode = "mtime";
+      };
+    };
+  };
 
   # Notes
   programs.obsidian = {
