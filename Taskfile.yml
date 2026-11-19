@@ -15,8 +15,7 @@ tasks:
   switch:
     desc: Switch to stable setup
     cmds:
-      - git add .
-      - nixos-rebuild switch --sudo --flake .#nixbook
+      - nixos-rebuild switch --sudo --flake path:.#nixbook
   switch-test:
     desc: Switch to new setup
     cmds:

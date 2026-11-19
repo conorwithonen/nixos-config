@@ -15,6 +15,10 @@ let
     "..." = "cd ../..";
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
+    dl = "cd ~/Downloads";
+    dt = "cd ~/Desktop";
+    p = "cd ~/projects";
+    ss = "cd ~/Documents/screenshots";
     vim = "nvim";
     gs = "jj st";
     gshow = "git show";
@@ -57,7 +61,6 @@ in {
 
   home.file = {
     ".face".source = ./icon.png;
-    ".zshrc".source = "${legacy-dotfiles}/link/.zshrc";
     "dotfiles".source = "${legacy-dotfiles}";
     "/var/lib/AccountService/icons/${username}/icon.png".source = ./icon.png;
   };
@@ -134,16 +137,23 @@ in {
 
   home.sessionPath = [
     "$HOME/.local/bin"
-  ];
+    "$HOME/.cargo/bin"
+  ] ++ (if isDarwin then [
+    "/opt/homebrew/bin"
+  ] else []);
+
+
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
     EDITOR = "nvim";
+    VISUAL = "nvim";
     # TODO: Fix prompt sourcing with dotfiles
     DOTFILES = "$HOME/dotfiles";
-    BROWSER = "firefox";
+    BITWARDEN_SSH_AUTH_SOCK = "/custom/path/to/bitwarden.sock";
+    SSH_AUTH_SOCK = "$$HOME/.bitwarden-ssh-agent.sock";
 
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
@@ -153,12 +163,13 @@ in {
   xdg = {
     enable = true;
     configFile = {
-      "starship.toml".source = "${legacy-dotfiles}/config/starship.toml";
       "zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
       "zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
       "jj/config.toml".text = builtins.readFile ./jj-config.toml;
       "jj/conf.d/personal.toml".text = builtins.readFile ./jj-personal.toml;
       "jj/conf.d/work.toml".text = builtins.readFile ./jj-work.toml;
+      "zsh/functions.sh".text = builtins.readFile ./functions.sh;
+      "starship.toml".text = builtins.readFile ./starship.toml;
     } // (if isDarwin then {
       # Rectangle.app. This has to be imported manually using the app.
       # "ghostty".source = "${legacy-dotfiles}/config/ghostty";
@@ -183,6 +194,8 @@ in {
   #---------------------------------------------------------------------
   # Programs
   #---------------------------------------------------------------------
+  programs.starship.enable = true;
+
   programs.jujutsu = {
     enable = true;
     # settings = {
@@ -241,40 +254,11 @@ in {
     defaultKeymap = "emacs";
     shellAliases = shellAliases;
     dotDir = "${config.xdg.configHome}/zsh";
-
     history.size = 10000;
     history.ignoreAllDups = true;
     history.path = "$HOME/.zsh_history";
     history.ignorePatterns = ["rm *" "pkill *" "cp *"];
-    # Legacy dotfile sourcing for aliases, functions, etc...
-    initContent = ''
-      autoload -Uz +X bashcompinit && bashcompinit
-      eval "$(starship init zsh)"
-      for file in ${legacy-dotfiles}/source/*; do
-          source "$file"
-      done
-      unset file;
-
-      ssh-create-resident() {
-        local name="$1"
-        ssh-keygen -t ed25519-sk -O resident -O application=ssh:$name -C "conor@conormanning.com"
-      }
-
-      ssh-create-nonresident() {
-        local name=$1
-        ssh-keygen -t ed25519-sk -O application=ssh:$name -C "conor@conormanning.com"
-      }
-
-      ssh-create-resident-no-touch() {
-        local name=$1
-        ssh-keygen -t ed25519-sk -O resident -O no-touch-required -O application="ssh:$name" -C "conor@conormanning.com"
-      }
-
-      # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-      [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
-      complete -C '${pkgs.awscli2}/bin/aws_completer' aws
-
-    '';
+    initContent = builtins.readFile ./zshrc;
   };
 
   programs.git = {
