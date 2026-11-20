@@ -163,17 +163,17 @@ in {
   xdg = {
     enable = true;
     configFile = {
-      "zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
-      "zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
       "jj/config.toml".text = builtins.readFile ./jj-config.toml;
       "jj/conf.d/personal.toml".text = builtins.readFile ./jj-personal.toml;
       "jj/conf.d/work.toml".text = builtins.readFile ./jj-work.toml;
       "zsh/functions.sh".text = builtins.readFile ./functions.sh;
       "starship.toml".text = builtins.readFile ./starship.toml;
+      "zed/settings.json".text = builtins.readFile ./zed-settings.json;
+      "zed/keymap.json".text = builtins.readFile ./zed-keymaps.json;
     } // (if isDarwin then {
       # Rectangle.app. This has to be imported manually using the app.
-      # "ghostty".source = "${legacy-dotfiles}/config/ghostty";
-      # "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+      "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+      "ghostty/config".text = builtins.readFile ./ghostty.darwin;
     } else {}) // (if isLinux then {
       "ghostty/config".text = builtins.readFile ./ghostty.linux  ;
     } else {});
@@ -194,6 +194,9 @@ in {
   #---------------------------------------------------------------------
   # Programs
   #---------------------------------------------------------------------
+  programs.zed-editor = {
+    enable = true;
+  };
   programs.starship.enable = true;
 
   programs.jujutsu = {

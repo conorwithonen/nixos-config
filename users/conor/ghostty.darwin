@@ -1,0 +1,41 @@
+# Looks
+theme = Kanagawabones
+macos-titlebar-proxy-icon = visible
+macos-titlebar-style = transparent
+font-size = 16
+split-divider-color = "#727169"
+background-opacity = 0.99
+background-blur = false
+window-padding-y = 0,0
+
+macos-option-as-alt = true
+
+macos-icon = glass
+
+# Keybinds
+# # Splits
+keybind = super+alt+l=goto_split:right
+keybind = super+alt+j=goto_split:bottom
+keybind = super+alt+h=goto_split:left
+keybind = super+alt+k=goto_split:top
+keybind = super+alt+left_bracket=goto_split:previous
+keybind = super+alt+right_bracket=goto_split:next
+
+# Text
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
+keybind = ctrl+shift+f=write_scrollback_file:open
+
+keybind = global:cmd+grave_accent=toggle_quick_terminal
+quick-terminal-position = bottom
+quick-terminal-screen = mouse
+quick-terminal-animation-duration = 0
+
+# When to notify: 'never', 'unfocused' (default), or 'always'
+notify-on-command-finish = unfocused
+
+# How to notify: 'bell' (sound/visual), 'notify' (system notification), or both
+notify-on-command-finish-action = bell,notify
+
+# Minimum duration (in seconds) the command must run before it triggers a ping
+notify-on-command-finish-after = 5s
