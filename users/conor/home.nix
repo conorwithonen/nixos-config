@@ -6,8 +6,6 @@ let
   isDarwin = pkgs.stdenv.isDarwin;
   isLinux = pkgs.stdenv.isLinux;
 
-  gnome_accent_color = "yellow";
-  # TODO: Fix this this.
   username = "conor";
 
   shellAliases = {
@@ -35,7 +33,7 @@ let
   } else {});
 
 in {
-  imports = [ ./nvim];
+  imports = [ ./nvim ];
 
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
@@ -65,32 +63,6 @@ in {
     "/var/lib/AccountService/icons/${username}/icon.png".source = ./icon.png;
   };
 
-  dconf = {
-    settings = {
-      "org/gnome/desktop/interface" = {
-        accent-color = "${gnome_accent_color}";
-        color-scheme = "prefer-dark";
-      };
-      "org/gnome/desktop/background" = {
-        picture-uri =
-          "file://${./wallpaper.jpg}";
-        picture-uri-dark =
-          "file://${./wallpaper.jpg}";
-        # picture-options = "zoom";
-      };
-      "org/gnome/desktop/input-sources" = {
-        xkb-options = [ "ctrl:nocaps" ];
-      };
-      "org/gnome/desktop/peripherals/touchpad" = {
-        natural-scroll = false;
-      };
-      "org/gnome/desktop/notifications/applications/thunderbird" = {
-        application-id = "thunderbird.desktop";
-        enable = false;
-        # show-banners = false;
-      };
-    };
-  };
 
   # # Disabled for now since we mismatch our versions. See flake.nix for details.
   # home.enableNixpkgsReleaseCheck = false;
@@ -109,27 +81,16 @@ in {
     pkgs.bat
     pkgs.yazi
     pkgs.obsidian
-    pkgs.qbittorrent
     pkgs.nodejs_22
     pkgs.go-task
-    pkgs.ghostty
     pkgs.gcc
     pkgs.starship
     pkgs.terraform
-    pkgs.mpv
-    pkgs.vlc
-    pkgs.clamav
     pkgs.ijq
-    pkgs.abcde
-    pkgs.mixxx
-    pkgs.nicotine-plus
-    pkgs.bitwarden-desktop
     pkgs.ansible
     pkgs.jujutsu
     pkgs.terraform-ls
     pkgs.zed-editor
-    pkgs.mullvad-vpn
-    pkgs.niri
   ];
   #---------------------------------------------------------------------
   # Env vars and dotfiles
@@ -153,7 +114,7 @@ in {
     # TODO: Fix prompt sourcing with dotfiles
     DOTFILES = "$HOME/dotfiles";
     BITWARDEN_SSH_AUTH_SOCK = "/custom/path/to/bitwarden.sock";
-    SSH_AUTH_SOCK = "$$HOME/.bitwarden-ssh-agent.sock";
+    SSH_AUTH_SOCK = "$HOME/.bitwarden-ssh-agent.sock";
 
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
@@ -172,22 +133,11 @@ in {
       "zed/keymap.json".text = builtins.readFile ./zed-keymaps.json;
     } // (if isDarwin then {
       # Rectangle.app. This has to be imported manually using the app.
-      "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+      "rectangle/RectangleProConfig.json".text = builtins.readFile ./RectangleProConfig.json;
       "ghostty/config".text = builtins.readFile ./ghostty.darwin;
     } else {}) // (if isLinux then {
       "ghostty/config".text = builtins.readFile ./ghostty.linux  ;
     } else {});
-    mimeApps = {
-      enable = true;
-      defaultApplications = {
-        "text/html" = "firefox.desktop";
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
-        "x-scheme-handler/about" = "firefox.desktop";
-        "x-scheme-handler/unknown" = "firefox.desktop";
-        "application/xhtml+xml" = "firefox.desktop";
-      };
-    };
   };
 
 #
@@ -205,10 +155,8 @@ in {
     # };
   };
   programs.thunderbird = {
-    enable = true;
-    profiles.default = {
-      isDefault = true;
-    };
+    enable = lib.mkDefault true;
+    profiles.default.isDefault = true;
   };
   # Email
   accounts.email.accounts = {
@@ -225,7 +173,7 @@ in {
         tls.enable = true;
       };
       thunderbird = {
-        enable = true;
+        enable = config.programs.thunderbird.enable;
         profiles = [ "default" ];
       };
       signature = {
@@ -241,7 +189,7 @@ in {
       realName = "Conor Manning";
       flavor = "gmail.com";
       thunderbird = {
-        enable = true;
+        enable = config.programs.thunderbird.enable;
         profiles = [ "default" ];
       };
     };

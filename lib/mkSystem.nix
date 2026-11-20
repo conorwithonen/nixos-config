@@ -7,6 +7,7 @@ name:
 {
   system,
   user,
+  username ? user,
   darwin ? false,
 }:
 
@@ -41,7 +42,7 @@ in systemFunc rec {
       home-manager.useUserPackages = true;
       home-manager.extraSpecialArgs = { inherit legacy-dotfiles user; };
       home-manager.backupFileExtension = "backup";
-      home-manager.users.${user} = import userHMConfig {
+      home-manager.users.${username} = import userHMConfig {
         inputs = inputs;
         currentSystemName = name;
       };
@@ -51,6 +52,7 @@ in systemFunc rec {
         currentSystem = system;
         currentSystemName = name;
         currentSystemUser = user;
+        currentSystemUsername = username;
         inputs = inputs;
       };
     }

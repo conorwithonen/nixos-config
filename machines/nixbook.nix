@@ -95,6 +95,17 @@
     docker-compose
     pkgs.cargo
     pkgs.rustc
+    pkgs.clamav
+    pkgs.mixxx
+    pkgs.mpv
+    pkgs.qbittorrent
+    pkgs.abcde
+    pkgs.nicotine-plus
+    pkgs.niri
+    pkgs.mullvad-vpn
+    pkgs.ghostty
+    pkgs.vlc
+    pkgs.bitwarden-desktop
   ];
 
   system.stateVersion = "25.05"; # Did you read the comment?

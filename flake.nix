@@ -4,6 +4,11 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
 
+    darwin = {
+      url = "github:nix-darwin/nix-darwin/nix-darwin-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -56,11 +61,15 @@
       };
   in
   {
-    nixosConfigurations = {
-      nixbook = mkSystem "nixbook" {
+    nixosConfigurations.nixbook = mkSystem "nixbook" {
        system = "x86_64-linux";
        user = "conor";
-      };
+    };
+    darwinConfigurations.work-machbook-pro = mkSystem "work-machbook-pro" {
+          system = "aarch64-darwin";
+          user   = "conor";
+          username = "conor.manning";
+          darwin = true;
     };
   };
 }
