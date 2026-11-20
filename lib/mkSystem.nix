@@ -15,14 +15,15 @@ let
   isLinux = !darwin;
 
   # The config files for this system.
-  machineConfig = ../hosts/${name}/default.nix;
-  userOSConfig = ../hosts/users/${user}/${if darwin then "darwin" else "nixos" }.nix;
-  userHMConfig = ../hosts/users/${user}/home.nix;
+  machineConfig = ../machines/${name}.nix;
+  userOSConfig = ../users/${user}/${if darwin then "darwin" else "nixos" }.nix;
+  userHMConfig = ../users/${user}/home.nix;
 
   # NixOS vs nix-darwin functionst
   systemFunc = if darwin then inputs.darwin.lib.darwinSystem else nixpkgs.lib.nixosSystem;
   home-manager = if darwin then inputs.home-manager.darwinModules else inputs.home-manager.nixosModules;
   sops-nix = inputs.sops-nix.homeManagerModules.sops;
+  sopsSystemModule = if darwin then inputs.sops-nix.darwinModules.sops else inputs.sops-nix.nixosModules.sops;
 
   inherit (nixpkgs.lib);
 in systemFunc rec {
@@ -32,12 +33,13 @@ in systemFunc rec {
     { nixpkgs.overlays = overlays; }
     { nixpkgs.config.allowUnfree = true; }
   ] ++ [
+    sopsSystemModule
     machineConfig
     userOSConfig
     home-manager.home-manager {
       home-manager.useGlobalPkgs = true;
       home-manager.useUserPackages = true;
-      home-manager.extraSpecialArgs = { inherit legacy-dotfiles user sops-nix; };
+      home-manager.extraSpecialArgs = { inherit legacy-dotfiles user; };
       home-manager.backupFileExtension = "backup";
       home-manager.users.${user} = import userHMConfig {
         inputs = inputs;

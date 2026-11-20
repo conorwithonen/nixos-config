@@ -1,6 +1,6 @@
 { inputs, currentSystemName, ... }:
 
-{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, sops-nix, ... }:
+{ config, lib, pkgs, pkgs-unstable, legacy-dotfiles, hunk, ... }:
 
 let
   isDarwin = pkgs.stdenv.isDarwin;
@@ -15,11 +15,16 @@ let
     "..." = "cd ../..";
     "...." = "cd ../../..";
     "....." = "cd ../../../..";
+    dl = "cd ~/Downloads";
+    dt = "cd ~/Desktop";
+    p = "cd ~/projects";
+    ss = "cd ~/Documents/screenshots";
     vim = "nvim";
     gs = "jj st";
     gshow = "git show";
     gshowf = "git show --name-only";
     sshconfig = "vim ~/.ssh/config";
+    list-hardware-keys = "ykman fido credentials list";
 
   } // (if isLinux then {
     # Two decades of using a Mac has made this such a strong memory
@@ -30,7 +35,7 @@ let
   } else {});
 
 in {
-  imports = [ sops-nix ./nvim];
+  imports = [ ./nvim];
 
   # Home-manager 22.11 requires this be set. We never set it so we have
   # to use the old state version.
@@ -38,16 +43,16 @@ in {
 
   #---------------------------------------------------------------------
   # Secrets
-  #---------------------------------------------------------------------
-  sops = {
-    defaultSopsFile = ./secrets.enc.yaml;
-    age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/nixbook-sops" ];
-      secrets = {
-        "syncthing/key" = { };
-        "syncthing/cert" = { };
-        "syncthing/password" = { };
-      };
-  };
+  # #---------------------------------------------------------------------
+  # sops = {
+  #   defaultSopsFile = ./secrets.enc.yaml;
+  #   age.sshKeyPaths = [ "${config.home.homeDirectory}/.ssh/nixbook-sops" ];
+  #     secrets = {
+  #       "syncthing/key" = { };
+  #       "syncthing/cert" = { };
+  #       "syncthing/password" = { };
+  #     };
+  # };
 
   #---------------------------------------------------------------------
   # Files
@@ -56,7 +61,6 @@ in {
 
   home.file = {
     ".face".source = ./icon.png;
-    ".zshrc".source = "${legacy-dotfiles}/link/.zshrc";
     "dotfiles".source = "${legacy-dotfiles}";
     "/var/lib/AccountService/icons/${username}/icon.png".source = ./icon.png;
   };
@@ -96,6 +100,7 @@ in {
   home.packages = [
     inputs.hunk.packages.${pkgs.stdenv.hostPlatform.system}.hunk
     pkgs.fzf
+    pkgs.yubikey-manager
     pkgs.fd
     pkgs.ripgrep
     pkgs.sops
@@ -105,7 +110,6 @@ in {
     pkgs.yazi
     pkgs.obsidian
     pkgs.qbittorrent
-    pkgs.syncthing
     pkgs.nodejs_22
     pkgs.go-task
     pkgs.ghostty
@@ -133,16 +137,23 @@ in {
 
   home.sessionPath = [
     "$HOME/.local/bin"
-  ];
+    "$HOME/.cargo/bin"
+  ] ++ (if isDarwin then [
+    "/opt/homebrew/bin"
+  ] else []);
+
+
 
   home.sessionVariables = {
     LANG = "en_US.UTF-8";
     LC_CTYPE = "en_US.UTF-8";
     LC_ALL = "en_US.UTF-8";
     EDITOR = "nvim";
+    VISUAL = "nvim";
     # TODO: Fix prompt sourcing with dotfiles
     DOTFILES = "$HOME/dotfiles";
-    BROWSER = "firefox";
+    BITWARDEN_SSH_AUTH_SOCK = "/custom/path/to/bitwarden.sock";
+    SSH_AUTH_SOCK = "$$HOME/.bitwarden-ssh-agent.sock";
 
   } // (if isDarwin then {
     # See: https://github.com/NixOS/nixpkgs/issues/390751
@@ -152,17 +163,17 @@ in {
   xdg = {
     enable = true;
     configFile = {
-      "yazi".source = "${legacy-dotfiles}/config/yazi";
-      "starship.toml".source = "${legacy-dotfiles}/config/starship.toml";
-      "zed/settings.json".source = "${legacy-dotfiles}/config/zed/settings.json";
-      "zed/keymap.json".source = "${legacy-dotfiles}/config/zed/keymap.json";
       "jj/config.toml".text = builtins.readFile ./jj-config.toml;
       "jj/conf.d/personal.toml".text = builtins.readFile ./jj-personal.toml;
       "jj/conf.d/work.toml".text = builtins.readFile ./jj-work.toml;
+      "zsh/functions.sh".text = builtins.readFile ./functions.sh;
+      "starship.toml".text = builtins.readFile ./starship.toml;
+      "zed/settings.json".text = builtins.readFile ./zed-settings.json;
+      "zed/keymap.json".text = builtins.readFile ./zed-keymaps.json;
     } // (if isDarwin then {
       # Rectangle.app. This has to be imported manually using the app.
-      # "ghostty".source = "${legacy-dotfiles}/config/ghostty";
-      # "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+      "rectangle/RectangleConfig.json".text = builtins.readFile ./RectangleConfig.json;
+      "ghostty/config".text = builtins.readFile ./ghostty.darwin;
     } else {}) // (if isLinux then {
       "ghostty/config".text = builtins.readFile ./ghostty.linux  ;
     } else {});
@@ -183,6 +194,11 @@ in {
   #---------------------------------------------------------------------
   # Programs
   #---------------------------------------------------------------------
+  programs.zed-editor = {
+    enable = true;
+  };
+  programs.starship.enable = true;
+
   programs.jujutsu = {
     enable = true;
     # settings = {
@@ -241,25 +257,11 @@ in {
     defaultKeymap = "emacs";
     shellAliases = shellAliases;
     dotDir = "${config.xdg.configHome}/zsh";
-
     history.size = 10000;
     history.ignoreAllDups = true;
     history.path = "$HOME/.zsh_history";
     history.ignorePatterns = ["rm *" "pkill *" "cp *"];
-    # Legacy dotfile sourcing for aliases, functions, etc...
-    initContent = ''
-      autoload -Uz +X bashcompinit && bashcompinit
-      eval "$(starship init zsh)"
-      for file in ${legacy-dotfiles}/source/*; do
-          source "$file"
-      done
-      unset file;
-
-      # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-      [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
-      complete -C '${pkgs.awscli2}/bin/aws_completer' aws
-
-    '';
+    initContent = builtins.readFile ./zshrc;
   };
 
   programs.git = {
@@ -291,17 +293,21 @@ in {
       isDefault = true;
      	settings = {
      	  "browser.startup.homepage"      = "https://wiki.conorwithonen.com";
-     	  "privacy.resistFingerprinting"  = true;
+        "extensions.autoDisableScopes" = 0;
+
+        # Dark UI + dark content
+        "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
+        "layout.css.prefers-color-scheme.content-override" = 0;
+
+        # RFP forces light, so use granular protection instead
+        "privacy.resistFingerprinting" = false;
+        "privacy.fingerprintingProtection" = true;
+        "privacy.fingerprintingProtection.overrides" = "+AllTargets,-CSSPrefersColorScheme";
      	};
       extensions = {
         packages = with pkgs.firefoxAddons; [
           bitwarden-password-manager
         ];
-      };
-
-      # optional: without this the addons need to be enabled manually after first install
-      settings = {
-        "extensions.autoDisableScopes" = 0;
       };
     };
   	policies = {
@@ -316,27 +322,30 @@ in {
   	};
   };
 
-  # Syncthing
-  services.syncthing = {
+
+  # Yazi
+  programs.yazi = {
     enable = true;
-    guiAddress = "127.0.0.1:8384";
-    key = config.sops.secrets."syncthing/key".path;
-    cert = config.sops.secrets."syncthing/cert".path;
-    guiCredentials = {
-     username = "conor";
-     passwordFile = config.sops.secrets."syncthing/password".path;
+    flavors = {
+      kanagawa = pkgs.fetchFromGitHub {
+        owner = "dangooddd";
+        repo = "kanagawa.yazi";
+        rev = "04985d12842b06bdb3ad5f1b3d7abc631059b7f5";
+        hash = "sha256-Yz0zRVzmgbrk0m7OkItxIK6W0WkPze/t09pWFgziNrw=";
+      };
     };
-  	settings = {
-      devices = {
-        "imac" = { id = "W4PLFOQ-MMAODQT-N64HU77-CGNKD4K-65JGV4A-JHCIURF-SBUCRGT-4HA33QC"; autoAcceptFolders = true; };
-        "phone" = { id = "WGPWB7E-B5F3BHR-2OQOSSH-K2BT37H-ZZSVC4B-VHATR7U-UGY4OFS-LI72IQO"; };
+    shellWrapperName = "y";
+    settings = {
+      theme.dark = "kanagawa";
+      mgr = {
+        show_hidden = true;
+        sort_dir_first = false;
+        sort_by = "mtime";
+        sort_reverse = true;
+        linemode = "mtime";
       };
     };
   };
-
-  # Yazi
-  programs.yazi.enable = true;
-  programs.yazi.shellWrapperName = "y";
 
   # Notes
   programs.obsidian = {

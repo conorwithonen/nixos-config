@@ -1,0 +1,143 @@
+{
+  "cli_default_open_behavior": "existing_window",
+  "vim": { "toggle_relative_line_numbers": false },
+  "terminal": { "show_count_badge": false },
+  "diff_view_style": "unified",
+  "agent_servers": {
+    "cursor": {
+      "default_config_options": { "model": "gpt-5.5", "mode": "agent" },
+      "favorite_config_option_values": { "mode": ["ask"] },
+      "type": "registry"
+    },
+    "codex-acp": {
+      "default_config_options": { "mode": "agent" },
+      "type": "registry"
+    }
+  },
+  "git_panel": {
+    "sort_by": "path",
+    "show_count_badge": false,
+    "collapse_untracked_diff": false,
+    "group_by": "status",
+    "button": true,
+    "entry_primary_click_action": "file_diff",
+    "diff_stats": true,
+    "folder_indicator": "icon",
+    "file_icons": false,
+    "status_style": "label_color",
+    "fallback_branch_name": "main",
+    "dock": "left",
+    "tree_view": false
+  },
+  "project_panel": {
+    "git_status_indicator": true,
+    "git_status": true,
+    "hide_gitignore": false,
+    "hide_hidden": false,
+    "dock": "left"
+  },
+  "redact_private_values": false,
+  "title_bar": { "show_branch_status_icon": true },
+  "outline_panel": { "git_status": true, "dock": "right", "button": true },
+  "context_servers": {
+    "terraform-context-server": { "enabled": true, "settings": {} },
+    "MCP_DOCKER": {
+      "enabled": true,
+      "command": "docker",
+      "args": ["mcp", "gateway", "run", "--profile", "jira"]
+    }
+  },
+  "language_models": {},
+  "auto_update_extensions": { "kanagawa-themes": false },
+  "show_edit_predictions": false,
+  "edit_predictions": {
+    "mode": "subtle",
+    "copilot": { "proxy": null, "proxy_no_verify": null }
+  },
+  "vim_mode": true,
+  "base_keymap": "VSCode",
+  "collaboration_panel": { "dock": "right", "button": false },
+  "agent": {
+    "threads_sidebar": { "position": "right" },
+    "tool_permissions": {
+      "tools": { "search_web": { "default": "allow" } },
+      "default": "allow"
+    },
+    "default_model": { "provider": "zed.dev", "model": "claude-sonnet-4-5" },
+    "default_profile": "ask",
+    "dock": "right",
+    "button": true
+  },
+  "git": {
+    "show_stage_restore_buttons": true,
+    "git_gutter": "tracked_files",
+    "enable_status": true,
+    "enable_diff": true,
+    "inline_blame": {
+      "location": "status_bar",
+      "show_commit_summary": false,
+      "delay_ms": 0,
+      "enabled": true
+    }
+  },
+  "icon_theme": "Colored Zed Icons Theme Dark",
+  "buffer_font_family": "JetBrains Mono",
+  "ui_font_size": 17,
+  "buffer_font_size": 16,
+  "theme": { "mode": "system", "light": "One Light", "dark": "Kanagawa Wave" },
+  "format_on_save": "off",
+  "languages": {
+    "Python": {
+      "tab_size": 4,
+      "formatter": "language_server",
+      "format_on_save": "on"
+    },
+    "Terraform": { "format_on_save": "on" }
+  },
+  "cursor_blink": false,
+  "relative_line_numbers": "enabled",
+  "scrollbar": { "git_diff": true, "show": "never" },
+  "vertical_scroll_margin": 0,
+  "tab_bar": { "show": true },
+  "toolbar": { "breadcrumbs": false, "quick_actions": false },
+  "current_line_highlight": "gutter",
+  "gutter": {
+    "line_numbers": true,
+    "runnables": false,
+    "breakpoints": false,
+    "folds": true
+  },
+  "auto_install_extensions": {
+    "basher": true,
+    "colored-zed-icons-theme": true,
+    "docker-compose": true,
+    "dockerfile": true,
+    "git-firefly": true,
+    "html": true,
+    "kanagawa-themes": true,
+    "liquid": true,
+    "lua": true,
+    "nginx": true,
+    "nix": true,
+    "puppet": true,
+    "python-snippets": true,
+    "ruby": true,
+    "terraform": true,
+    "terraform-context-server": true,
+    "toml": true
+  },
+  "tabs": { "git_status": true, "file_icons": true },
+  "lsp": {
+    "yaml-language-server": {
+      "settings": {
+        "yaml": {
+          "schemas": {
+            "~/.config/zed/schemas/bitbucket-pipelines.json": [
+              "bitbucket-pipelines.yml"
+            ]
+          }
+        }
+      }
+    }
+  }
+}

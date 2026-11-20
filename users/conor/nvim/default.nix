@@ -33,11 +33,11 @@
       terraform-ls
       lua-language-server
     ];
-    extraLuaConfig = builtins.readFile ./init.lua;
+    initLua = builtins.readFile ./init.lua;
   };
 
   # Live-editable symlink: Lua changes apply without a rebuild.
   # Adjust the path to wherever the repo is checked out.
   xdg.configFile."nvim/lua".source = config.lib.file.mkOutOfStoreSymlink
-    "${config.home.homeDirectory}/nixos-config/hosts/users/conor/nvim/lua";
+    "${config.home.homeDirectory}/nixos-config/users/conor/nvim/lua";
 }

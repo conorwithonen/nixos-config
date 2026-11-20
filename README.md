@@ -2,24 +2,13 @@
 
 Flake-based NixOS + Home Manager configuration for the `nixbook` laptop.
 
-```
-├── flake.nix
-├── hosts
-│   ├── common.nix
-│   ├── nixbook/            # host config, hardware config
-│   └── users/conor/        # home.nix, jj configs, secrets.yaml, etc.
-├── lib/mkSystem.nix
-├── .sops.yaml              # sops creation rules (age public keys)
-└── Taskfile.yml
-```
-
 ## Secrets
 
 Secrets are managed with [sops-nix](https://github.com/Mic92/sops-nix) using
 [age](https://github.com/FiloSottile/age) encryption. The age key is derived
 from a dedicated SSH key named **`nixbook-sops`**.
 
-- Encrypted file: `hosts/users/conor/secrets.yaml`
+- Encrypted file: `users/conor/secrets.yaml`
 - Rules and public key: `.sops.yaml`
 - Decryption (at login, via Home Manager): `~/.ssh/nixbook-sops`
 
@@ -122,7 +111,7 @@ Check that decryption works:
 
 ```bash
 SOPS_AGE_KEY="$(nix shell nixpkgs#ssh-to-age -c ssh-to-age -private-key -i ~/.ssh/nixbook-sops)" \
-  nix shell nixpkgs#sops -c sops -d hosts/users/conor/secrets.yaml
+  nix shell nixpkgs#sops -c sops -d users/conor/secrets.yaml
 ```
 
 Then rebuild:
@@ -153,7 +142,7 @@ chmod 600 ~/.config/sops/age/keys.txt
 Then edit:
 
 ```bash
-sops hosts/users/conor/secrets.yaml
+sops users/conor/secrets.yaml
 ```
 
 Remember to `git add` (or track in jj) the file, or the flake won't see it.
@@ -163,7 +152,7 @@ Remember to `git add` (or track in jj) the file, or the flake won't see it.
 1. Generate a new key: `ssh-keygen -t ed25519 -N "" -f ~/.ssh/nixbook-sops-new`
 2. Get its age public key: `ssh-to-age < ~/.ssh/nixbook-sops-new.pub`
 3. Add the new age key to `.sops.yaml` next to the old one.
-4. Re-encrypt: `sops updatekeys hosts/users/conor/secrets.yaml`
+4. Re-encrypt: `sops updatekeys users/conor/secrets.yaml`
 5. Swap the new key into `~/.ssh/nixbook-sops`, rebuild, confirm secrets decrypt.
 6. Remove the old key from `.sops.yaml`, run `sops updatekeys` again, and update backups.
 

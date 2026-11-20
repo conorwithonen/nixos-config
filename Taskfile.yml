@@ -15,8 +15,7 @@ tasks:
   switch:
     desc: Switch to stable setup
     cmds:
-      - git add .
-      - nixos-rebuild switch --sudo --flake .#nixbook
+      - nixos-rebuild switch --sudo --flake path:.#nixbook
   switch-test:
     desc: Switch to new setup
     cmds:
@@ -24,11 +23,11 @@ tasks:
   show_secrets:
     desc: "Riskyyyy"
     cmds:
-      - sops -d hosts/users/conor/secrets.enc.yaml
+      - sops -d users/conor/secrets.enc.yaml
   edit_secrets:
     desc: "Riskyyyy"
     cmds:
-      - sops edit hosts/users/conor/secrets.enc.yaml
+      - sops edit users/conor/secrets.enc.yaml
   clean:
     desc: Cleans older nixos generations
     cmds:
