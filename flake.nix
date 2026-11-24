@@ -24,6 +24,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    handy = {
+      url = "github:cjpais/Handy";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-firefox-addons.url = "github:osipog/nix-firefox-addons";
 
     legacy-dotfiles = {
@@ -38,7 +43,8 @@
     sops-nix,
     home-manager,
     legacy-dotfiles,
-    hunk, ... }@inputs:
+    hunk,
+    handy, ... }@inputs:
   let
       overlays = [
         (_final: prev: let
@@ -57,7 +63,7 @@
         inputs.nix-firefox-addons.overlays.default
       ];
       mkSystem = import ./lib/mkSystem.nix {
-        inherit nixpkgs overlays inputs legacy-dotfiles hunk;
+        inherit nixpkgs overlays inputs legacy-dotfiles hunk handy;
       };
   in
   {
